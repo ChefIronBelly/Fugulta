@@ -1,0 +1,87 @@
+force_umount=Yes  # set Yes for forced umount /ram at shutdown
+force_resync=Yes  # set Yes to re-sync at shutdown
+
+# list of daemons
+# daemons must be space separated (not tabs)
+#
+skip_daemons='mountd'  # skipped in stop_daemons()
+kill_daemons='mountd'  # -KILLed in kill_daemons()
+
+# stop_daemons - to eliminate all daemons before usbfadm_r
+#
+stop_daemons () {
+    echo -n 'stopping daemons:'
+    for srv in $(rcctl ls started); do
+        if ! expr " $skip_daemons " : ".* $srv " >/dev/null ; then
+            rcctl stop $srv
+        fi
+    done
+    echo "\ndone."
+}
+
+# kill_daemons - to eliminate all daemons at umount /ram
+#
+kill_daemons () {
+    ulimit -c 0  # to avoid useless coredumps
+    for srv in $kill_daemons; do
+        pkill -KILL $srv
+    done
+}
+
+# usbfadm_r - perform re-sync of the usbfadm utility
+#
+# This function calls usbfadm's sync function on shutdown to
+# synchronize the contents of the USB stick with mfs.
+# If usbfadm is incompletely configured, this function will invoke a
+# sub-shell to prompt for configuration and saving by usbfadm.
+# If re-synchronisation fails repeatedly, it will still launch a
+# sub-shell for data preservation work, allowing the user to remove
+# the cause of the error and perform usbfadm sync manually or by other
+# means to preserve the data.
+#
+usbfadm_r () {
+    ( # Invoking auto-save process in a subshell
+
+      export PATH=$PATH:/usr/local/bin:/usr/local/bin:/usr/fuguita/sbin:/usr/fuguita/bin
+
+      # check if 'saveas' is set
+      #
+      if [[ -z $(</boottmp/boot_user_config) ]] 2>/dev/null; then
+          echo "= The 'saveas' of usbfadm utility is not set."
+          echo "= Please do 'saveas' then 'sync' in the interactive mode of usbfadm."
+          echo = invoking interactive shell for emergency...
+          PS1="(emg) $PS1" /bin/ksh -li
+      fi
+
+      # usbfadm with retry loop
+      #
+      retry=0
+      retrymax=3
+      waitsec=5
+      ulimit -d unlimited  # prevent rsync from failing
+      ulimit -m unlimited  # due to lack of memory
+      while ! /usr/fuguita/sbin/usbfadm -r; do
+          retry=$((retry+1))
+          if [ $retry -ge $retrymax ]; then
+              echo = too many failures of usbfadm
+              echo = invoking interactive shell for emergency
+              PS1="(emg) $PS1" /bin/ksh -li
+              retry=0  # reset retry loop then do again...
+          else
+              echo usbfadm failed,
+          fi
+          echo will retry after $waitsec seconds...
+          sleep $waitsec
+      done )
+}
+
+[[ "$force_umount" = [Yy][Ee][Ss] ]] && stop_daemons
+
+# not to set default 'saveas' when archive deployed
+# to avoid misoperation of usbfadm sync
+if [[ $(cat /boottmp/boot_mode) != usbflash_arc ]]; then
+    [[ "$force_resync" = [Yy][Ee][Ss] ]] && usbfadm_r
+fi
+
+kill_daemons
+[[ "$force_umount" = [Yy][Ee][Ss] ]] && /boottmp/umount -f /ram

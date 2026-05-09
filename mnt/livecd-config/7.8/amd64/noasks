@@ -1,0 +1,25 @@
+#
+# noasks - parameter settings for non-interactive boot
+#
+# Make statements uncommented
+# Then assign real values
+#
+#
+# FuguIta system device
+#   - Use one of two lines
+#noask_rdev=sd2a  # device name format
+noask_rdev=47abd2a77a6ec065.a  # DUID format
+#
+# max mfs size
+noask_umem=75%
+#
+# boot mode
+noask_setup_rw_mode=3
+#
+# storage device
+#   - Use one of two lines
+#noask_confdev=sd2d
+noask_confdev=47abd2a77a6ec065.d  # DUID format
+#
+# data set name in USB flash drive
+noask_confdata=momofuku
