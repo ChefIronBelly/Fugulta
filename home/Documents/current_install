@@ -1,11 +1,14 @@
-# OpenBSD 7.8-current
+# OpenBSD 7.9-current
 
-# start w latest OpenBSD-7.8 current snapshot
+# start w latest OpenBSD-7.9 current snapshot
 
 default install GPT and using UFS default sizes
 
 # pkg_add install github-cli git firefox geany mc mpv yt-dlp mpg123 liberation-fonts
 scrot fastfetch
+
+# cd /etc
+# ln -sf /usr/share/zoneinfo/America/New_York localtime
 
 # echo permit persist :wheel > /etc/doas.conf
 logout
@@ -14,10 +17,10 @@ logout
 as user
 
 $ mkdir ~/Source & cd Source
-$ git clone https://github.com/ChefIronBelly/OpenBSD-D.git
+$ git clone https://github.com/ChefIronBelly/OpenBSD.git
 cp user files and root files from /boot /etc /home to system
 
-$ cd Source /dwm /dmenu /st and sudo make clean install
+$ cd Source /dwm /dmenu /st and doas make clean install
 $ doas mkdir /mnt/usb
 
-# 260101
+# 260602
