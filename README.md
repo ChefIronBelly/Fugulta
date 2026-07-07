@@ -1,4 +1,4 @@
-# OS: OpenBSD 7.9-current
+# OS: FuguIta 7.9
 
 https://fuguita.org/
 
