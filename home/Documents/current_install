@@ -1,10 +1,10 @@
-# OpenBSD 7.9-current
+# FuguIta 7.9
 
-# start w latest OpenBSD-7.9 current snapshot
+# start w latest FuguIta – An OpenBSD-Based Live System
 
-default install GPT and using UFS default sizes
+follow https://fuguita.org/?FuguIta/StartGuide
 
-# pkg_add install github-cli git firefox geany mc mpv yt-dlp mpg123 liberation-fonts
+# pkg_add github-cli git firefox geany mc mpv yt-dlp mpg123 liberation-fonts
 scrot fastfetch
 
 # cd /etc
@@ -23,4 +23,4 @@ cp user files and root files from /boot /etc /home to system
 $ cd Source /dwm /dmenu /st and doas make clean install
 $ doas mkdir /mnt/usb
 
-# 260602
+# 260707
