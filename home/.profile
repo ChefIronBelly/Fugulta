@@ -6,6 +6,16 @@ HISTFILE=$HOME/.ksh_history
 HISTSIZE=1000
 export HISTFILE HISTSIZE
 
+LANG=en_US.UTF-8
+LC_CTYPE=en_US.UTF-8
+LC_ALL=""
+TZ=America/New_York
+export LANG LC_CTYPE LC_ALL TZ
+
+export EDITOR=vi
+export EXINIT="se sm ai redraw sw=4"
+export VISUAL=${EDITOR}
+
 PATH=$HOME/.bin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/X11R6/bin:/usr/local/bin:/usr/local/sbin
 export PATH HOME TERM
 
