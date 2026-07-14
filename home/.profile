@@ -3,7 +3,7 @@
 # sh/ksh initialization
 
 HISTFILE=$HOME/.ksh_history
-HISTSIZE=1000
+HISTSIZE=2000
 export HISTFILE HISTSIZE
 
 LANG=en_US.UTF-8
